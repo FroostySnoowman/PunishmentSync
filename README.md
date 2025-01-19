@@ -1,4 +1,4 @@
-# # **PunishmentSync**
+# **PunishmentSync**
 
 > **PunishmentSync** is a powerful Discord bot that synces moderation punishments across multiple guilds and in game servers.
 
