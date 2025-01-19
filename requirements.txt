@@ -1,0 +1,5 @@
+async-mojang==1.0.4
+aio-mc-rcon==3.2.2
+aiosqlite==0.20.0
+discord.py==2.4.0
+pyyaml==6.0.2
