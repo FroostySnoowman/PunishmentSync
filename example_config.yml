@@ -1,0 +1,31 @@
+General:
+    TOKEN: "" # BOT TOKEN
+    STATUS: "online" # online, idle, dnd, invisible
+
+    ACTIVITY: "watching" # watching, listening, playing, streaming
+    DOING_ACTIVITY: "Punishments" # What the bot is watching, listening, playing, or streaming
+    STREAMING_ACTIVITY_TWITCH_URL: "" # Twitch URL (if ACTIVITY is streaming)
+
+    EMBED_COLOR: "#65A8E6" # Embed color (HEX)
+
+Staff:
+    STAFF_GUILD_ID: 1329177426055401522 # Guild ID where the staff role is
+    STAFF_ROLE_ID: 1330333710775750708 # Staff role ID
+    STAFF_LOGS_CHANNEL_ID: 1329177762535309404 # Staff logs channel ID
+
+Guilds: # Guilds where the bot will sync punishments across (SPACING MUST BE EXACTLY THE SAME)
+    - ID: 1329177426055401522
+      MUTED_ROLE_ID: 1330441030281072730
+
+    - ID: 1330333857412681728
+      MUTED_ROLE_ID: 1330441192684654703
+
+Commands:
+    BAN_COMMAND: "ban {name} {time} {reason}" # In game command to ban a user
+    KICK_COMMAND: "kick {name} {reason}" # In game command to ban a user
+    MUTE_COMMAND: "mute {name} {time} {reason}" # In game command to mute a user
+
+RCON:
+    HOST: "123.45.67.890" # RCON Host
+    PORT: 25575 # RCON Port
+    PASSWORD: "SECURE_PASSWORD" # RCON Password
