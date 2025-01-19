@@ -11,7 +11,8 @@
 2. **Inviting**: Click `OAuth2` and select the `bot` and `applications.commands` scopes, scroll down and select the `Administrator` permission, scroll down and `Copy` the `Generated URL`, paste it into your web browser and invite the bot to **ALL** guilds you want it to function in.
 3. **Generating Bot Token**: Click `Bot` and `Reset Token` and keep that token handy for the next step.
 4. **Configurating**: Visit the `example_config.yml` file, copy all the contents, and create a `config.yml` file where you paste all the contents of the example config in. Paste the bot token in `TOKEN` and configure everything else to your needs.
-5. **Start Punishing**: Start by typing `/` in a server that the bot shares with you to view all the commands it has to offer.
+6. **Running The Bot**: Install [Python](https://www.python.org/downloads/) and run the main bot file. `python3 main.py`
+6. **Start Punishing**: Start by typing `/` in a server that the bot shares with you to view all the commands it has to offer.
 
 ---
 
