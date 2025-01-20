@@ -64,7 +64,7 @@ class BanCog(commands.Cog):
         staff_role = staff_guild.get_role(staff_role_id)
 
         if staff_role in staff_user.roles:
-            embed = discord.Embed(title="MBL Punishments", description="Loading...", color=discord.Color.from_str(embed_color))
+            embed = discord.Embed(title="Mort", description="Loading...", color=discord.Color.from_str(embed_color))
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
             timestamp = int(datetime.now().timestamp())
@@ -73,27 +73,27 @@ class BanCog(commands.Cog):
                 ban_time, beautified = await convert_time_to_int(time)
 
             try:
-                embed = discord.Embed(title="MBL Punishments", description=f"{member.mention}, you were banned from {interaction.guild.name} for {reason} at <t:{timestamp}:f>.", color=discord.Color.from_str(embed_color))
+                embed = discord.Embed(title="Mort", description=f"{member.mention}, you were banned from {interaction.guild.name} for {reason} at <t:{timestamp}:f>.", color=discord.Color.from_str(embed_color))
                 await member.send(embed=embed)
 
                 await ban_member(interaction, member, reason, ban_time + timestamp if time else None)
 
-                embed = discord.Embed(title="MBL Punishments", description=f"Successfully banned {member.mention}! They will be banned {f'for {beautified}' if time else 'forever'}.", color=discord.Color.from_str(embed_color))
+                embed = discord.Embed(title="Mort", description=f"Successfully banned {member.mention}! They will be banned {f'for {beautified}' if time else 'forever'}.", color=discord.Color.from_str(embed_color))
                 await interaction.edit_original_response(embed=embed)
             except:
                 await ban_member(interaction, member, reason, ban_time + timestamp if time else None)
 
-                embed = discord.Embed(title="MBL Punishments", description=f"Successfully banned {member.mention}! They will be banned {f'for {beautified}' if time else 'forever'}.", color=discord.Color.from_str(embed_color))
+                embed = discord.Embed(title="Mort", description=f"Successfully banned {member.mention}! They will be banned {f'for {beautified}' if time else 'forever'}.", color=discord.Color.from_str(embed_color))
                 embed.set_footer(text="They were not notified.")
                 await interaction.edit_original_response(embed=embed)
             
-            embed = discord.Embed(title="MBL Punishments", description=f"**{member}** was banned by {interaction.user.mention} for **{reason}**.", color=discord.Color.from_str(embed_color))
+            embed = discord.Embed(title="Mort", description=f"**{member}** was banned by {interaction.user.mention} for **{reason}**.", color=discord.Color.from_str(embed_color))
             embed.set_author(name=interaction.user, icon_url=interaction.user.display_avatar.url)
             embed.timestamp = datetime.now()
 
             await staff_logs_channel.send(embed=embed)
         else:
-            embed = discord.Embed(title="MBL Punishments", description="You do not have permission to use this command.", color=discord.Color.red())
+            embed = discord.Embed(title="Mort", description="You do not have permission to use this command.", color=discord.Color.red())
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(name="unban", description="Unbans a member!")
@@ -105,7 +105,7 @@ class BanCog(commands.Cog):
         staff_role = staff_guild.get_role(staff_role_id)
 
         if staff_role in staff_user.roles:
-            embed = discord.Embed(title="MBL Punishments", description="Loading...", color=discord.Color.from_str(embed_color),)
+            embed = discord.Embed(title="Mort", description="Loading...", color=discord.Color.from_str(embed_color),)
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
             async with aiosqlite.connect('database.db') as db:
@@ -126,16 +126,16 @@ class BanCog(commands.Cog):
                 await db.execute('UPDATE bans SET expiration = ? WHERE member_id = ?', ('expired', member_id),)
                 await db.commit()
 
-            embed = discord.Embed(title="MBL Punishments", description=f"Successfully unbanned user with ID `{member_id}` from all guilds.", color=discord.Color.from_str(embed_color),)
+            embed = discord.Embed(title="Mort", description=f"Successfully unbanned user with ID `{member_id}` from all guilds.", color=discord.Color.from_str(embed_color),)
             await interaction.edit_original_response(embed=embed)
 
-            embed = discord.Embed(title="MBL Punishments", description=f"**{member_id}** was unbanned by {interaction.user.mention}.", color=discord.Color.from_str(embed_color))
+            embed = discord.Embed(title="Mort", description=f"**{member_id}** was unbanned by {interaction.user.mention}.", color=discord.Color.from_str(embed_color))
             embed.set_author(name=interaction.user, icon_url=interaction.user.display_avatar.url)
             embed.timestamp = datetime.now()
 
             await staff_logs_channel.send(embed=embed)
         else:
-            embed = discord.Embed(title="MBL Punishments", description="You do not have permission to use this command.", color=discord.Color.red(),)
+            embed = discord.Embed(title="Mort", description="You do not have permission to use this command.", color=discord.Color.red(),)
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(name="iban", description="Bans an in game player!")
@@ -150,20 +150,20 @@ class BanCog(commands.Cog):
         staff_role = staff_guild.get_role(staff_role_id)
 
         if staff_role in staff_user.roles:
-            embed = discord.Embed(title="MBL Punishments", description="Loading...", color=discord.Color.from_str(embed_color))
+            embed = discord.Embed(title="Mort", description="Loading...", color=discord.Color.from_str(embed_color))
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
             async with API() as api:
                 if not name:
                     if not uuid:
-                        embed = discord.Embed(title="MBL Punishments", description="You must provide a name or UUID.", color=discord.Color.red())
+                        embed = discord.Embed(title="Mort", description="You must provide a name or UUID.", color=discord.Color.red())
                         await interaction.edit_original_response(embed=embed, ephemeral=True)
                         return
                     else:
                         try:
                             name = await api.get_username(uuid)
                         except:
-                            embed = discord.Embed(title="MBL Punishments", description="Invalid UUID.", color=discord.Color.red())
+                            embed = discord.Embed(title="Mort", description="Invalid UUID.", color=discord.Color.red())
                             await interaction.edit_original_response(embed=embed, ephemeral=True)
                             return
                 else:
@@ -171,11 +171,11 @@ class BanCog(commands.Cog):
                         try:
                             uuid = await api.get_uuid(name)
                         except:
-                            embed = discord.Embed(title="MBL Punishments", description="Invalid name.", color=discord.Color.red())
+                            embed = discord.Embed(title="Mort", description="Invalid name.", color=discord.Color.red())
                             await interaction.edit_original_response(embed=embed, ephemeral=True)
                             return
                     else:
-                        embed = discord.Embed(title="MBL Punishments", description="You must provide a name or UUID, not both.", color=discord.Color.red())
+                        embed = discord.Embed(title="Mort", description="You must provide a name or UUID, not both.", color=discord.Color.red())
                         await interaction.edit_original_response(embed=embed, ephemeral=True)
                         return
                 
@@ -191,20 +191,20 @@ class BanCog(commands.Cog):
                 response = await execute_command(command)
 
                 if response:
-                    embed = discord.Embed(title="MBL Punishments", description=f"Successfully banned {name}! They will be banned {f'for {time}' if time else 'forever'}.", color=discord.Color.from_str(embed_color))
+                    embed = discord.Embed(title="Mort", description=f"Successfully banned {name}! They will be banned {f'for {time}' if time else 'forever'}.", color=discord.Color.from_str(embed_color))
                     await interaction.edit_original_response(embed=embed)
                 else:
-                    embed = discord.Embed(title="MBL Punishments", description=f"Failed to connect to the server!", color=discord.Color.red())
+                    embed = discord.Embed(title="Mort", description=f"Failed to connect to the server!", color=discord.Color.red())
                     await interaction.edit_original_response(embed=embed)
 
-            embed = discord.Embed(title="MBL Punishments", description=f"**{name}** was banned by **{interaction.user}**.", color=discord.Color.from_str(embed_color))
+            embed = discord.Embed(title="Mort", description=f"**{name}** was banned by **{interaction.user}**.", color=discord.Color.from_str(embed_color))
             embed.set_footer(text="In game player.")
             embed.set_author(name=interaction.user, icon_url=interaction.user.display_avatar.url)
             embed.timestamp = datetime.now()
 
             await staff_logs_channel.send(embed=embed)
         else:
-            embed = discord.Embed(title="MBL Punishments", description="You do not have permission to use this command.", color=discord.Color.red())
+            embed = discord.Embed(title="Mort", description="You do not have permission to use this command.", color=discord.Color.red())
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
 async def setup(bot: commands.Bot):

@@ -133,9 +133,9 @@ class SQLiteCog(commands.Cog):
 
         if await self.bot.is_owner(interaction.user):
             await refresh_table(table)
-            embed = discord.Embed(title="MBL Punishments", description=f"Successfully refreshed the table **{table}**!", color=discord.Color.from_str(embed_color))
+            embed = discord.Embed(title="Mort", description=f"Successfully refreshed the table **{table}**!", color=discord.Color.from_str(embed_color))
         else:
-            embed = discord.Embed(title="MBL Punishments", description="You do not have permission to use this command!", color=discord.Color.red())
+            embed = discord.Embed(title="Mort", description="You do not have permission to use this command!", color=discord.Color.red())
         
         await interaction.followup.send(embed=embed)
 

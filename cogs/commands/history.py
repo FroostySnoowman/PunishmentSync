@@ -24,7 +24,7 @@ class HistoryPages(discord.ui.View):
 
     def generate_embed(self):
         start, end = self.slices[self.page - 1]
-        embed = discord.Embed(title="MBL Punishments", description=f"History of {self.punishment_type}", color=discord.Color.from_str(embed_color))
+        embed = discord.Embed(title="Mort", description=f"History of {self.punishment_type}", color=discord.Color.from_str(embed_color))
 
         for idx, record in enumerate(self.records[start:end], start=start + 1):
             embed.add_field(
@@ -108,13 +108,13 @@ class History(discord.ui.Select):
             records = await cursor.fetchall()
 
             if records == []:
-                embed = discord.Embed(title="MBL Punishments", description=f"{self.user.name} has no {punishment_type.lower()}!", color=discord.Color.from_str(embed_color))
+                embed = discord.Embed(title="Mort", description=f"{self.user.name} has no {punishment_type.lower()}!", color=discord.Color.from_str(embed_color))
                 await interaction.response.edit_message(embed=embed)
                 return
 
         total_pages = math.ceil(len(records) / 25) or 1
 
-        embed = discord.Embed(title="MBL Punishments", color=discord.Color.from_str(embed_color))
+        embed = discord.Embed(title="Mort", color=discord.Color.from_str(embed_color))
         embed.set_footer(text=f"Page 1 of {total_pages}")
 
         view = HistoryPages(records, 1, total_pages, punishment_type)
@@ -140,7 +140,7 @@ class HistoryCog(commands.Cog):
     @app_commands.command(name="history", description="Views the history of a user!")
     @app_commands.describe(user="Who's history would you like to view?")
     async def history(self, interaction: discord.Interaction, user: discord.User) -> None:
-        embed = discord.Embed(title="MBL Punishments", color=discord.Color.from_str(embed_color))
+        embed = discord.Embed(title="Mort", color=discord.Color.from_str(embed_color))
         await interaction.response.send_message(embed=embed, view=HistoryView(user), ephemeral=True)
 
 async def setup(bot: commands.Bot):

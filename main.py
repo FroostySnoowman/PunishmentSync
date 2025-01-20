@@ -103,7 +103,7 @@ initial_extensions = [
                       'cogs.functions.sqlite'
                       ]
 
-class MBLPunishments(commands.Bot):
+class Mort(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=commands.when_mentioned_or('.'), owner_ids=[503641822141349888, 1029146068996325447], intents=intents, status=_status, activity=_activity)
 
@@ -124,7 +124,7 @@ class MBLPunishments(commands.Bot):
         for extension in initial_extensions:
             await self.load_extension(extension)
 
-bot = MBLPunishments()
+bot = Mort()
 bot.remove_command('help')
 
 @bot.event

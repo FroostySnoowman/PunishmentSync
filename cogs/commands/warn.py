@@ -27,7 +27,7 @@ class WarnCog(commands.Cog):
         staff_role = staff_guild.get_role(staff_role_id)
 
         if staff_role in staff_user.roles:
-            embed = discord.Embed(title="MBL Punishments", description="Loading...", color=discord.Color.from_str(embed_color))
+            embed = discord.Embed(title="Mort", description="Loading...", color=discord.Color.from_str(embed_color))
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
             timestamp = int(datetime.now().timestamp())
@@ -35,23 +35,23 @@ class WarnCog(commands.Cog):
             await warn_member(interaction, member, reason)
 
             try:
-                embed = discord.Embed(title="MBL Punishments", description=f"{member.mention}, you were warned for {reason} at <t:{timestamp}:f>.", color=discord.Color.from_str(embed_color))
+                embed = discord.Embed(title="Mort", description=f"{member.mention}, you were warned for {reason} at <t:{timestamp}:f>.", color=discord.Color.from_str(embed_color))
                 await member.send(embed=embed)
 
-                embed = discord.Embed(title="MBL Punishments", description=f"Successfully warned {member.mention}!", color=discord.Color.from_str(embed_color))
+                embed = discord.Embed(title="Mort", description=f"Successfully warned {member.mention}!", color=discord.Color.from_str(embed_color))
                 await interaction.edit_original_response(embed=embed)
             except:
-                embed = discord.Embed(title="MBL Punishments", description=f"Successfully warned {member.mention}!", color=discord.Color.from_str(embed_color))
+                embed = discord.Embed(title="Mort", description=f"Successfully warned {member.mention}!", color=discord.Color.from_str(embed_color))
                 embed.set_footer(text="They were not notified.")
                 await interaction.edit_original_response(embed=embed)
 
-            embed = discord.Embed(title="MBL Punishments", description=f"**{member.mention}** was warned by {interaction.user} for **{reason}**.", color=discord.Color.from_str(embed_color))
+            embed = discord.Embed(title="Mort", description=f"**{member.mention}** was warned by {interaction.user} for **{reason}**.", color=discord.Color.from_str(embed_color))
             embed.set_author(name=interaction.user, icon_url=interaction.user.display_avatar.url)
             embed.timestamp = datetime.now()
 
             await staff_logs_channel.send(embed=embed)
         else:
-            embed = discord.Embed(title="MBL Punishments", description="You do not have permission to use this command.", color=discord.Color.red())
+            embed = discord.Embed(title="Mort", description="You do not have permission to use this command.", color=discord.Color.red())
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
 async def setup(bot: commands.Bot):
