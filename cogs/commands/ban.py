@@ -157,14 +157,14 @@ class BanCog(commands.Cog):
                 if not name:
                     if not uuid:
                         embed = discord.Embed(title="Mort", description="You must provide a name or UUID.", color=discord.Color.red())
-                        await interaction.edit_original_response(embed=embed, ephemeral=True)
+                        await interaction.edit_original_response(embed=embed)
                         return
                     else:
                         try:
                             name = await api.get_username(uuid)
                         except:
                             embed = discord.Embed(title="Mort", description="Invalid UUID.", color=discord.Color.red())
-                            await interaction.edit_original_response(embed=embed, ephemeral=True)
+                            await interaction.edit_original_response(embed=embed)
                             return
                 else:
                     if not uuid:
@@ -172,11 +172,11 @@ class BanCog(commands.Cog):
                             uuid = await api.get_uuid(name)
                         except:
                             embed = discord.Embed(title="Mort", description="Invalid name.", color=discord.Color.red())
-                            await interaction.edit_original_response(embed=embed, ephemeral=True)
+                            await interaction.edit_original_response(embed=embed)
                             return
                     else:
                         embed = discord.Embed(title="Mort", description="You must provide a name or UUID, not both.", color=discord.Color.red())
-                        await interaction.edit_original_response(embed=embed, ephemeral=True)
+                        await interaction.edit_original_response(embed=embed)
                         return
                 
                 if time is None:
