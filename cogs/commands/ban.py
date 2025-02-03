@@ -1,12 +1,13 @@
 import discord
 import aiosqlite
 import yaml
+import re
 from discord import app_commands
 from discord.ext import commands, tasks
 from async_mojang import API
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
-from cogs.functions.utils import convert_time_to_int, execute_command, ban_member
+from cogs.functions.utils import execute_command, ban_member
 
 with open('config.yml', 'r') as file:
     data = yaml.safe_load(file)
@@ -33,7 +34,7 @@ class BanCog(commands.Cog):
             bans = await cursor.fetchall()
 
             for row in bans:
-                if row[4] and row[4] <= datetime.now().timestamp():
+                if row[5] and row[5] <= datetime.now().timestamp():
                     await db.execute('UPDATE bans SET expiration = ? WHERE member_id = ?', ('expired', row[1]))
 
                 for guild_id in guilds.keys():
@@ -70,20 +71,33 @@ class BanCog(commands.Cog):
             timestamp = int(datetime.now().timestamp())
 
             if time:
-                ban_time, beautified = await convert_time_to_int(time)
+                time_list = re.split('(\d+)', time)
+                if time_list[2] == "s":
+                    time_in_s = int(time_list[1])
+                if time_list[2] == "m":
+                    time_in_s = int(time_list[1]) * 60
+                if time_list[2] == "h":
+                    time_in_s = int(time_list[1]) * 60 * 60
+                if time_list[2] == "d":
+                    time_in_s = int(time_list[1]) * 60 * 60 * 24
+                
+                ts = datetime.now().timestamp()
+                ts = datetime.now() + timedelta(seconds=time_in_s)
+                ban_time = int(ts.timestamp())
 
             try:
-                embed = discord.Embed(title="Mort", description=f"{member.mention}, you were banned from {interaction.guild.name} for {reason} at <t:{timestamp}:f>.", color=discord.Color.from_str(embed_color))
+                embed = discord.Embed(title="Mort", description=f"{member.mention}, you were banned from {interaction.guild.name} for {reason} at <t:{timestamp}:f>.{f' This ban will expire at <t:{ban_time}:F>' if time else ''}", color=discord.Color.from_str(embed_color))
+                embed.timestamp = datetime.now()
                 await member.send(embed=embed)
 
-                await ban_member(interaction, member, reason, ban_time + timestamp if time else None)
+                await ban_member(interaction, member, reason, ban_time if time else None)
 
-                embed = discord.Embed(title="Mort", description=f"Successfully banned {member.mention}! They will be banned {f'for {beautified}' if time else 'forever'}.", color=discord.Color.from_str(embed_color))
+                embed = discord.Embed(title="Mort", description=f"Successfully banned {member.mention}! They will be banned {f'for {time}' if time else 'forever'}.", color=discord.Color.from_str(embed_color))
                 await interaction.edit_original_response(embed=embed)
             except:
-                await ban_member(interaction, member, reason, ban_time + timestamp if time else None)
+                await ban_member(interaction, member, reason, ban_time if time else None)
 
-                embed = discord.Embed(title="Mort", description=f"Successfully banned {member.mention}! They will be banned {f'for {beautified}' if time else 'forever'}.", color=discord.Color.from_str(embed_color))
+                embed = discord.Embed(title="Mort", description=f"Successfully banned {member.mention}! They will be banned {f'for {time}' if time else 'forever'}.", color=discord.Color.from_str(embed_color))
                 embed.set_footer(text="They were not notified.")
                 await interaction.edit_original_response(embed=embed)
             
@@ -198,7 +212,7 @@ class BanCog(commands.Cog):
                     await interaction.edit_original_response(embed=embed)
 
             embed = discord.Embed(title="Mort", description=f"**{name}** was banned by **{interaction.user}**.", color=discord.Color.from_str(embed_color))
-            embed.set_footer(text="In game player.")
+            embed.set_footer(text="In game player")
             embed.set_author(name=interaction.user, icon_url=interaction.user.display_avatar.url)
             embed.timestamp = datetime.now()
 

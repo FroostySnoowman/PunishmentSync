@@ -15,25 +15,13 @@ rcon_password = data["RCON"]["PASSWORD"]
 
 guilds = {guild['ID']: guild['MUTED_ROLE_ID'] for guild in data['Guilds']}
 
-async def convert_time_to_int(time: str) -> tuple[int, str]:
-    pattern = r'(\d+)([dhms])'
-    matches = re.findall(pattern, time)
-
-    unit_multipliers = {'d': 86400, 'h': 3600, 'm': 60, 's': 1}
-    unit_names = {'d': 'Day', 'h': 'Hour', 'm': 'Minute', 's': 'Second'}
-    
-    total_seconds = sum(int(value) * unit_multipliers[unit] for value, unit in matches)
-    beautified = ' '.join(f"{value} {unit_names[unit]}{'s' if int(value) > 1 else ''}" for value, unit in matches)
-    
-    return total_seconds, beautified
-
 async def execute_command(command: str, timeout=5):
     try:
         async with Client(rcon_host, rcon_port, rcon_password) as client:
             await asyncio.wait_for(client.send_cmd(command), timeout=timeout)
             return True
     except:
-            return False
+        return False
 
 async def kick_member(interaction: discord.Interaction, member: discord.Member, reason: str) -> None:
     async with aiosqlite.connect('database.db') as db:

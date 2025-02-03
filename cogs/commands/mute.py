@@ -1,12 +1,13 @@
 import discord
 import aiosqlite
 import yaml
+import re
 from discord import app_commands
 from discord.ext import commands, tasks
 from async_mojang import API
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
-from cogs.functions.utils import convert_time_to_int, execute_command, mute_member
+from cogs.functions.utils import execute_command, mute_member
 
 with open('config.yml', 'r') as file:
     data = yaml.safe_load(file)
@@ -33,30 +34,35 @@ class MuteCog(commands.Cog):
             mutes = await cursor.fetchall()
 
             for mute in mutes:
-                if mute[4] and mute[4] <= datetime.now().timestamp():
-                    await db.execute('UPDATE mutes SET expiration = ? WHERE member_id = ?', ('expired', mute[1]))
+                member_id = mute[1]
+                expiration_time = mute[5]
 
-                for guild_id in guilds.keys():
-                    guild = self.bot.get_guild(guild_id)
-                    if guild is None:
-                        continue
+                if expiration_time and expiration_time <= int(datetime.now().timestamp()):
+                    await db.execute('UPDATE mutes SET expiration = ? WHERE member_id = ?', ('expired', member_id))
+                    await db.commit()
 
-                    member = guild.get_member(mute[1])
-                    if member is None:
-                        continue
+                    cursor_check = await db.execute('SELECT expiration FROM mutes WHERE member_id = ?', (member_id,))
+                    expiration_status = await cursor_check.fetchone()
 
-                    muted_role_id = guilds[guild_id]
-                    
-                    muted_role = guild.get_role(muted_role_id)
-                    if muted_role is None:
-                        continue
+                    if expiration_status and expiration_status[0] == "expired":
+                        for guild_id in guilds.keys():
+                            guild = self.bot.get_guild(guild_id)
+                            if guild is None:
+                                continue
 
-                    try:
-                        await member.remove_roles(muted_role)
-                    except:
-                        continue
+                            member = guild.get_member(member_id)
+                            if member is None:
+                                continue
 
-            await db.commit()
+                            muted_role_id = guilds[guild_id]
+                            muted_role = guild.get_role(muted_role_id)
+                            if muted_role is None:
+                                continue
+
+                            try:
+                                await member.remove_roles(muted_role)
+                            except:
+                                continue
 
     @mute_loop.before_loop
     async def before_mute_loop(self):
@@ -79,20 +85,33 @@ class MuteCog(commands.Cog):
             timestamp = int(datetime.now().timestamp())
 
             if time:
-                ban_time, beautified = await convert_time_to_int(time)
+                time_list = re.split('(\d+)', time)
+                if time_list[2] == "s":
+                    time_in_s = int(time_list[1])
+                if time_list[2] == "m":
+                    time_in_s = int(time_list[1]) * 60
+                if time_list[2] == "h":
+                    time_in_s = int(time_list[1]) * 60 * 60
+                if time_list[2] == "d":
+                    time_in_s = int(time_list[1]) * 60 * 60 * 24
+                
+                ts = datetime.now().timestamp()
+                ts = datetime.now() + timedelta(seconds=time_in_s)
+                mute_time = int(ts.timestamp())
 
             try:
-                embed = discord.Embed(title="Mort", description=f"{member.mention}, you were muted for {reason} at <t:{timestamp}:f>.", color=discord.Color.from_str(embed_color))
+                embed = discord.Embed(title="Mort", description=f"{member.mention}, you were muted for {reason} at <t:{timestamp}:f>.{f' This mute will expire at <t:{mute_time}:F>' if time else ''}", color=discord.Color.from_str(embed_color))
+                embed.timestamp = datetime.now()
                 await member.send(embed=embed)
 
-                await mute_member(interaction, member, reason, ban_time + timestamp if time else None)
+                await mute_member(interaction, member, reason, mute_time if time else None)
 
-                embed = discord.Embed(title="Mort", description=f"Successfully muted {member.mention}! They will be muted {f'for {beautified}' if time else 'forever'}.", color=discord.Color.from_str(embed_color))
+                embed = discord.Embed(title="Mort", description=f"Successfully muted {member.mention}! They will be muted {f'for {time}' if time else 'forever'}.", color=discord.Color.from_str(embed_color))
                 await interaction.edit_original_response(embed=embed)
             except:
-                await mute_member(interaction, member, reason, ban_time + timestamp if time else None)
+                await mute_member(interaction, member, reason, mute_time if time else None)
 
-                embed = discord.Embed(title="Mort", description=f"Successfully muted {member.mention}! They will be muted {f'for {beautified}' if time else 'forever'}.", color=discord.Color.from_str(embed_color))
+                embed = discord.Embed(title="Mort", description=f"Successfully muted {member.mention}! They will be muted {f'for {time}' if time else 'forever'}.", color=discord.Color.from_str(embed_color))
                 embed.set_footer(text="They were not notified.")
                 await interaction.edit_original_response(embed=embed)
 
@@ -215,7 +234,7 @@ class MuteCog(commands.Cog):
                     await interaction.edit_original_response(embed=embed)
 
             embed = discord.Embed(title="Mort", description=f"**{name}** was muted by **{interaction.user}**.", color=discord.Color.from_str(embed_color))
-            embed.set_footer(text="In game player.")
+            embed.set_footer(text="In game player")
             embed.set_author(name=interaction.user, icon_url=interaction.user.display_avatar.url)
             embed.timestamp = datetime.now()
 

@@ -113,7 +113,7 @@ class KickCog(commands.Cog):
                     await interaction.edit_original_response(embed=embed)
 
             embed = discord.Embed(title="Mort", description=f"**{name}** was kicked by **{interaction.user}**.", color=discord.Color.from_str(embed_color))
-            embed.set_footer(text="In game player.")
+            embed.set_footer(text="In game player")
             embed.set_author(name=interaction.user, icon_url=interaction.user.display_avatar.url)
             embed.timestamp = datetime.now()
 
