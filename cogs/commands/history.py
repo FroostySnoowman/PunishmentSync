@@ -140,8 +140,16 @@ class HistoryCog(commands.Cog):
     @app_commands.command(name="history", description="Views the history of a user!")
     @app_commands.describe(user="Who's history would you like to view?")
     async def history(self, interaction: discord.Interaction, user: discord.User) -> None:
-        embed = discord.Embed(title="Mort", color=discord.Color.from_str(embed_color))
-        await interaction.response.send_message(embed=embed, view=HistoryView(user), ephemeral=True)
+        staff_guild = interaction.client.get_guild(staff_guild_id)
+        staff_user = staff_guild.get_member(interaction.user.id)
+        staff_role = staff_guild.get_role(staff_role_id)
+
+        if staff_role in staff_user.roles:
+            embed = discord.Embed(title="Mort", color=discord.Color.from_str(embed_color))
+            await interaction.response.send_message(embed=embed, view=HistoryView(user), ephemeral=True)
+        else:
+            embed = discord.Embed(title="Mort", description="You do not have permission to use this command.", color=discord.Color.red())
+            await interaction.response.send_message(embed=embed, ephemeral=True)
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(HistoryCog(bot))
